@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spesial Buat Kamu 💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            transition: all 0.5s ease;
+        }
+
+        /* Halaman Login */
+        #login-page h2 {
+            margin-bottom: 15px;
+            color: #d63384;
+        }
+
+        #login-page p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .date-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        select, input {
+            padding: 10px;
+            border: 2px solid #ffb6c1;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        select:focus, input:focus {
+            border-color: #d63384;
+        }
+
+        button {
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #e0314b;
+        }
+
+        .error-msg {
+            color: #ff0000;
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Halaman Utama / Tembakan */
+        #main-page {
+            display: none;
+        }
+
+        #main-page h1 {
+            color: #d63384;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        #main-page p {
+            color: #444;
+            font-size: 15px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+            height: 50px;
+        }
+
+        .btn-yes {
+            background: #2b8a3e;
+            width: 100px;
+        }
+
+        .btn-yes:hover {
+            background: #2b8a3e;
+        }
+
+        .btn-no {
+            background: #c92a2a;
+            position: absolute;
+            width: 100px;
+            transition: 0.05s;
+        }
+
+        .btn-no:hover {
+            background: #a01f1f;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- KONTROL LOGIN BERDASARKAN TANGGAL LAHIR -->
+    <div class="container" id="login-page">
+        <h2>🔒 Akses Khusus</h2>
+        <p>Masukkan tanggal lahir untuk membuka pesan rahasia ini!</p>
+        
+        <div class="date-inputs">
+            <!-- Pilihan Tanggal -->
+            <select id="tgl">
+                <option value="">Tgl</option>
+                <!-- Script JS akan mengisi tanggal 1-31 -->
+            </select>
+
+            <!-- Pilihan Bulan -->
+            <select id="bln">
+                <option value="">Bulan</option>
+                <option value="1">Januari</option>
+                <option value="2">Februari</option>
+                <option value="3">Maret</option>
+                <option value="4">April</option>
+                <option value="5">Mei</option>
+                <option value="6">Juni</option>
+                <option value="7">Juli</option>
+                <option value="8">Agustus</option>
+                <option value="9">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+
+            <!-- Input Tahun -->
+            <input type="number" id="thn" placeholder="Tahun" style="width: 90px;" min="1950" max="2020">
+        </div>
+
+        <button onclick="checkLogin()">Masuk 💌</button>
+        <p class="error-msg" id="errorMsg"> Tanggal lahir salah! Coba ingat-ingat lagi.</p>
+    </div>
+
+    <!-- KONTROL HALAMAN TEMBAK HATI -->
+    <div class="container" id="main-page">
+        <h1>Hai Kamu! ❤️</h1>
+        <p>Sebenarnya udah lama aku pengen ngomong ini...<br><b>Maukah kamu melanjutkan nya ke hubungan yang legih serius</b> 🥰</p>
+        
+        <div class="btn-group">
+            <button class="btn-yes" onclick="sayYes()">Mau! 💖</button>
+            <button class="btn-no" id="btnNo" onmouseover="moveButton()" onmouseenter="moveButton()" onmousemove="moveButton()" onclick="sayNo()">Enggak 😝</button>
+        </div>
+    </div>
+
+    <script>
+        // Mengisi pilihan tanggal (1-31) secara otomatis
+        const selectTgl = document.getElementById('tgl');
+        for (let i = 1; i <= 31; i++) {
+            let option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+            selectTgl.appendChild(option);
+        }
+
+        // --- ATUR TANGGAL LAHIR TARGET DI SINI ---
+        const BENAR_TGL = 12; // Contoh: Tanggal 17
+        const BENAR_BLN = 11;  // Contoh: Bulan Agustus (8)
+        const BENAR_THN = 2026; // Contoh: Tahun 2004
+        // ----------------------------------------
+
+        // --- ATUR NOMOR WHATSAPP ANDA DI SINI ---
+        // Format: 62812345678 (tanpa +, hanya angka)
+        const WHATSAPP_NUMBER = "6282266156161"; // GANTI DENGAN NOMOR ANDA!
+        // ----------------------------------------
+
+        function checkLogin() {
+            let inputTgl = parseInt(document.getElementById('tgl').value);
+            let inputBln = parseInt(document.getElementById('bln').value);
+            let inputThn = parseInt(document.getElementById('thn').value);
+            let errorMsg = document.getElementById('errorMsg');
+
+            if (inputTgl === BENAR_TGL && inputBln === BENAR_BLN && inputThn === BENAR_THN) {
+                // Jika benar, transisi ke halaman utama
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('main-page').style.display = 'block';
+            } else {
+                // Jika salah, tampilkan pesan error
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        // Efek tombol "Enggak" lari-lari ketika didekati kursor
+        function moveButton() {
+            const btnNo = document.getElementById('btnNo');
+            // Gerakan lebih agresif dan random
+            const x = Math.random() * 400 - 200;
+            const y = Math.random() * 300 - 150;
+            btnNo.style.transform = `translate(${x}px, ${y}px)`;
+            
+            // Tambah rotasi random untuk efek lari yang lebih lucu
+            const rotate = Math.random() * 10 - 5;
+            btnNo.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
+        }
+
+        // Aksi ketika tombol "Mau!" diklik - Mengirim ke WhatsApp
+        function sayYes() {
+            // Pesan yang akan dikirim ke WhatsApp
+            const message = "Haii! Aku mau! Terima kasih udah nanya. I'm so happy!";
+            
+            // Encode message untuk URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Buat WhatsApp link
+            const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+            
+            // Langsung redirect ke WhatsApp
+            window.location.href = whatsappLink;
+        }
+
+        // Aksi ketika tombol "Enggak" berhasil diklik
+        function sayNo() {
+            const message = "Wkwk, aku tahu ini bakal jadi jawaban kamu! 😝 Tapi next time siapa tahu? 😊";
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+            
+            window.location.href = whatsappLink;
+        }
+
+        // Juga gerak ketika ditouch (mobile)
+        const btnNo = document.getElementById('btnNo');
+        if (btnNo) {
+            btnNo.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                moveButton();
+            });
+        }
+    </script>
+</body>
+</html>
